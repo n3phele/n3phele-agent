@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<project name="build" default="dist" basedir=".">
+	<description> Build file for Workflow project </description>
+
+	<property name="dist.dir" value="dist" />
+	<property name="JARS" value="jars" />
+
+
+	
+    <target name="dist" depends="" description="-- Create project deliverables">
+    	<jar jarfile="lib/agent.jar">
+    	<fileset dir="build" includes="**/*.class" />
+    		<fileset dir="build" includes="**/*.properties" />
+    	<manifest>
+    	<attribute name="Main-Class" value="n3phele.agent.Service"/>
+    	</manifest>
+    	</jar>
+        <!-- Create a combined jar file that includes dependent jars 
+    	<delete file="${dist.dir}/agent.zip" quiet="true"/>
+        <zip destfile="${dist.dir}/agent.zip" >
+            <fileset dir="./lib" includes="**" />
+        </zip> -->
+    	<delete file="${dist.dir}/new_agent.tgz" quiet="true"/>
+    	<tar tarfile="${dist.dir}/new_agent.tgz" basedir="./lib"
+    		includes="**" longfile="gnu" compression="gzip" />
+    </target>
+</project>
