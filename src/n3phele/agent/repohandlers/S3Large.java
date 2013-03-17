@@ -20,29 +20,26 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import n3phele.agent.model.FileRef;
+import n3phele.agent.model.Origin;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
 
 public class S3Large implements Repo {
-	private static Logger log = Logger.getLogger(S3.class.getName());
+	private static Logger log = Logger.getLogger(S3Large.class.getName());
 	private AWSCredentials credentials;
 	private Long length = null;
 	private String encoding;
@@ -76,8 +73,8 @@ public class S3Large implements Repo {
          return new DataInputStream(object().getObjectContent());
 	}
 	
-	public FileRef put(InputStream input, long length, String encoding)  {
-		FileRef result = new FileRef(tag, description, source, root, key, null, kind, 0, null, false);
+	public Origin put(InputStream input, long length, String encoding)  {
+		Origin result = new Origin(source+"/"+root+"/"+key, 0, null, null);
 		TransferManager  tm = null;
 		try {
 			tm = new TransferManager(this.credentials);
@@ -168,39 +165,7 @@ public class S3Large implements Repo {
 	}
 	
 	
-//	public void get(String bucketName, String key, File file) throws FileNotFoundException {
-//
-//		
-//		AmazonS3 s3 = new AmazonS3Client(this.credentials);
-//		 S3Object object = s3.getObject(new GetObjectRequest(bucketName, key));
-//		 this.length = object.getObjectMetadata().getContentLength();
-//		 this.progress = 0;
-//         log.info("Content-Type: "  + object.getObjectMetadata().getContentType()+" "+file.getAbsolutePath());
-//         
-//         DataInputStream reader = new DataInputStream(object.getObjectContent());
-//         DataOutputStream writer = new DataOutputStream(new FileOutputStream(file));
-//         byte[] buffer = new byte[8*4096];
-//    	try {
-//    		int len;
-//            while ((len = reader.read(buffer)) != -1) {
-//				this.progress += len;
-//				writer.write(buffer, 0, len);
-//            }
-//		} catch (IOException e) {
-//			log.log(Level.SEVERE, "File "+file.getAbsolutePath(),e);
-//		} finally {
-//			log.info("written "+this.progress+" bytes");
-//			try {
-//				writer.close();
-//			} catch (IOException e) {
-//			} finally {
-//				try {
-//					reader.close();
-//				} catch (IOException e) {
-//				}
-//			}
-//		}
-//	}
+
 	/**
 	 * @return the length
 	 */

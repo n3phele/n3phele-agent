@@ -13,20 +13,22 @@
  */
 package n3phele.service.core;
 
-import com.sun.jersey.api.container.MappableContainerException;
-import com.sun.jersey.core.util.Base64;
-import com.sun.jersey.spi.container.ContainerRequest;
-import com.sun.jersey.spi.container.ContainerRequestFilter;
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
+
+import com.sun.jersey.api.container.MappableContainerException;
+import com.sun.jersey.core.util.Base64;
+import com.sun.jersey.spi.container.ContainerRequest;
+import com.sun.jersey.spi.container.ContainerRequestFilter;
 
 public class BasicSecurityFilter implements ContainerRequestFilter {
+	//private final static Logger log = Logger.getLogger(BasicSecurityFilter.class.getName());
 
     @Context
     UriInfo uriInfo;

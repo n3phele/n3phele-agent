@@ -24,16 +24,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import n3phele.agent.model.Origin;
+
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.BlobStoreContextFactory;
 import org.jclouds.hpcloud.objectstorage.HPCloudObjectStorageClient;
 import org.jclouds.openstack.swift.domain.MutableObjectInfoWithMetadata;
 import org.jclouds.openstack.swift.domain.SwiftObject;
 
-import n3phele.agent.model.FileRef;
-
 public class Swift implements Repo {
-private static Logger log = Logger.getLogger(S3.class.getName());
+private static Logger log = Logger.getLogger(Swift.class.getName());
 private String accessKey;
 private String secretKey;
 private Long length = null;
@@ -67,9 +67,9 @@ private long modificationTime=0;
 	}
 
 	@Override
-	public FileRef put(InputStream input, long length, String encoding)
+	public Origin put(InputStream input, long length, String encoding)
 			throws IOException {
-		FileRef result = new FileRef(tag, description, source, root, key, null, kind, 0, null, false);
+		Origin result = new Origin(source+"/"+root+"/"+key, 0, null, null);
 		try {
 			HPCloudObjectStorageClient swift = getJcloudsContext();
 			SwiftObject objectDefn = swift.newSwiftObject();

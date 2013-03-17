@@ -30,7 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import n3phele.agent.model.FileRef;
+import n3phele.agent.model.Origin;
 
 import com.amazonaws.services.s3.internal.Mimetypes;
 
@@ -82,9 +82,9 @@ public class LocalFile implements Repo {
 	 * @see n3phele.agent.repohandlers.Repo#put(java.lang.String, java.lang.String, java.io.InputStream, long, java.lang.String)
 	 */
 	@Override
-	public FileRef put(InputStream input, long length,
+	public Origin put(InputStream input, long length,
 			String encoding) throws IOException {
-		FileRef result = new FileRef(tag, description, source, root, key, null, kind, 0, null, false);
+		Origin result = new Origin(this.root+File.separator+this.key, 0, null, null);
 		File path = file.getCanonicalFile().getParentFile();
 		if(!path.exists()) {
 			path.mkdirs();

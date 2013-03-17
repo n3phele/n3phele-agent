@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
+
 @XmlRootElement(name="Task")
 @XmlType(name="Task", propOrder={"id", "uri", "notification", "started", "finished", "cmd", "stdin", "stdout", "stderr", "exitcode", "progress", "manifest"})
 public class Task {
@@ -34,14 +35,14 @@ public class Task {
 	private String stdin;
 	private StringBuilder stdout;
 	private StringBuilder stderr;
-	private FileRef[] manifest;
+	private Origin[] manifest;
 	private int exitcode;
 	private int progress= 0; // 0.. 1000
 	private Process process;
 	private URI notification;
 
 	
-	Task() {}
+	public Task() {}
 
 	public Task(String[] cmd, String stdin, URI notification) {
 		this(null, Calendar.getInstance().getTime(), null, cmd, stdin, new StringBuilder(), new StringBuilder(),
@@ -302,14 +303,14 @@ public class Task {
 	/**
 	 * @return the manifest
 	 */
-	public FileRef[] getManifest() {
+	public Origin[] getManifest() {
 		return this.manifest;
 	}
 
 	/**
 	 * @param manifest the manifest to set
 	 */
-	public void setManifest(FileRef[] manifest) {
+	public void setManifest(Origin[] manifest) {
 		this.manifest = manifest;
 	}
 

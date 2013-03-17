@@ -22,17 +22,17 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
-//import java.util.zip.ZipInputStream;
 
-import com.amazonaws.services.s3.internal.Mimetypes;
-
-import n3phele.agent.model.FileRef;
+import n3phele.agent.model.Origin;
 import n3phele.agent.model.Task;
 import n3phele.agent.repohandlers.LocalFile;
 import n3phele.agent.repohandlers.Repo;
 import n3phele.agent.repohandlers.S3Large;
 import n3phele.agent.repohandlers.Swift;
 import n3phele.agent.zip.ZipInputStream;
+
+import com.amazonaws.services.s3.internal.Mimetypes;
+//import java.util.zip.ZipInputStream;
 
 public class XferExecuter extends Thread {
 	private static Logger log = Logger.getLogger(XferExecuter.class.getName());
@@ -55,7 +55,7 @@ public class XferExecuter extends Thread {
 	@SuppressWarnings("unused")
 	private boolean lazyXfer;
 	private int retry = 2;
-	private List<FileRef> delivered = new ArrayList<FileRef>();
+	private List<Origin> delivered = new ArrayList<Origin>();
 
 	/** Transfers files between source and destination repositories.
 	 * Supports transfer of:
@@ -139,7 +139,7 @@ public class XferExecuter extends Thread {
 					me.setCmd(new String[] {srcRepository.toString(), " extracting ", zipComponent, "->", destRepository.toString()});
 					log.info(srcRepository.toString()+ " extracting "+zipComponent+"->"+destRepository.toString());
 
-					FileRef ref = destRepository.put(
+					Origin ref = destRepository.put(
 						extractor = new ZipExtractorStream( zipComponent,
 							zip = new ZipInputStream(
 								progress = new ProgressInputStream(
@@ -192,7 +192,7 @@ public class XferExecuter extends Thread {
 								filename);
 						me.setCmd(new String[] {srcRepository.toString(),"inflating",entry.getName(), "->", destRepository.toString()});
 						log.info(srcRepository.toString()+" inflating "+entry.getName()+"->"+destRepository.toString());
-						FileRef file = destRepository.put(
+						Origin file = destRepository.put(
 								new ProgressInputStream(zip, null, entry.getSize()),
 								entry.getSize(), mimetype);
 						delivered.add(file);
@@ -226,7 +226,7 @@ public class XferExecuter extends Thread {
 					
 					me.setCmd(new String[] {srcRepository.toString(), "->", destRepository.toString()});
 					log.info(srcRepository.toString()+"->"+destRepository.toString());
-					FileRef file = destRepository.put(
+					Origin file = destRepository.put(
 							progress = new ProgressInputStream(
 									buffer = new BufferedInputStream(input = srcRepository.getInputStream(), 64*1024), me, srcRepository.getTotalLength()),
 							srcRepository.getLength(), srcRepository.getEncoding());
@@ -261,7 +261,7 @@ public class XferExecuter extends Thread {
 		} finally {
 			me.setProgress(1000);
 			me.setFinished(Calendar.getInstance().getTime());
-			me.setManifest(this.delivered.toArray(new FileRef[this.delivered.size()]));
+			me.setManifest(this.delivered.toArray(new Origin[this.delivered.size()]));
 			try {
 				srcRepository.getInputStream().close();
 			} catch (Exception e) {

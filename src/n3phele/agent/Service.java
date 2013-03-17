@@ -17,24 +17,23 @@ package n3phele.agent;
 import java.io.IOException;
 import java.net.URI;
 
-import org.glassfish.grizzly.http.server.HttpServer;
-
 import n3phele.agent.rest.impl.TaskResource;
+import n3phele.service.core.AuthenticationExceptionMapper;
 import n3phele.service.core.BasicSecurityFilter;
 
-import com.sun.grizzly.http.embed.GrizzlyWebServer;
+import org.glassfish.grizzly.http.server.HttpServer;
+
 import com.sun.jersey.api.container.filter.RolesAllowedResourceFilterFactory;
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.DefaultResourceConfig;
-import com.sun.jersey.api.core.ResourceConfig;
-import com.sun.jersey.spi.container.servlet.ServletContainer;
 
 public class Service {
     private static HttpServer webServer;
     public static URI myURI = null;
+    
    
     protected static void startServer() throws IllegalArgumentException, NullPointerException, IOException {
-    	DefaultResourceConfig resourceConfig = new DefaultResourceConfig(TaskResource.class);   
+    	DefaultResourceConfig resourceConfig = new DefaultResourceConfig(TaskResource.class, AuthenticationExceptionMapper.class);   
     	resourceConfig.getContainerRequestFilters().add(new BasicSecurityFilter());
     	resourceConfig.getResourceFilterFactories().add(new RolesAllowedResourceFilterFactory());
 

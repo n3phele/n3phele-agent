@@ -43,13 +43,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.sun.jersey.core.util.Base64;
-
 import n3phele.agent.Service;
 import n3phele.agent.model.CommandRequest;
-import n3phele.agent.model.FileRef;
 import n3phele.agent.model.Task;
 import n3phele.service.core.Resource;
+
+import com.sun.jersey.core.util.Base64;
 
 @Path("task")
 public class TaskResource {
@@ -122,12 +121,12 @@ public class TaskResource {
 		String stdin = cr.getStdin();
 		URI notificationURI = cr.getNotification();
 		String cmd = cr.getCmd();
-		FileRef[] files = cr.getFiles();
+		//FileRef[] files = cr.getFiles();
 		if(stdin == null)
 			stdin = "";
 
 		Task t = new Task(new String[] {"/bin/bash", "-e", "-c", cmd }, stdin, notificationURI);
-		TaskExecuter exe = new TaskExecuter(t.getCmd(), t.getStdin(), t, files);
+		TaskExecuter exe = new TaskExecuter(t.getCmd(), t.getStdin(), t);
 		if(Service.myURI== null) Service.myURI = uriInfo.getBaseUriBuilder().build();
 		t.setUri(uriInfo.getBaseUriBuilder().path(TaskResource.class).path(t.getId()).build());
 		synchronized (tasks) {
